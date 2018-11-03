@@ -7,6 +7,8 @@
 #include "I2C_DMAC.h"
 #define ASYNC_I2C
 
+void dmac_error(void);
+
 class MyI2C {
  private:
   bool init;
@@ -20,6 +22,9 @@ public:
       I2C.begin(400000);      // Start I2C bus at 400kHz          
       I2C.setWriteChannel(2); // Set the I2C1 DMAC write channel to 2
       I2C.setReadChannel(3);  // Set the I2C1 DMAC read channel to 3
+      I2C.attachDmacErrorCallback((voidFuncPtr)dmac_error);
+    } else {
+      ; // Serial.println("Duplicate MyI2C.begin() call");
     }
   }
 
@@ -71,12 +76,13 @@ public:
     sendTransmission();
     // Serial.println("endTransmission: write spinning");
     while(I2C.writeBusy) {
-      if( I2C.check_error() ) {
-        Serial.println("during write spin, got error");
-        break;
-      }
+      // Serial.print(".");
+      // if( I2C.check_error() ) {
+      //   Serial.println("during write spin, got error");
+      //   break;
+      // }
     }
-    Serial.println("endTransmission: exit spinning");
+    // Serial.println("endTransmission: exit spinning");
     return 0; // not sure how to get proper status
   }
 };

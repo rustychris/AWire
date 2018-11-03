@@ -133,8 +133,10 @@ I2C_DMAC::I2C_DMAC(SERCOM* sercomClass, uint8_t pinSDA, uint8_t pinSCL) : // Con
 }																																		
 
 uint8_t I2C_DMAC::check_error(void) {
-  if( sercom->I2CM.INTFLAG.bit.ERROR )
-    return 1;
+  // This might be hanging things up.  not sure.
+  // turned out to be a conflict with async_i2c interrupt-based
+  //if( sercom->I2CM.INTFLAG.bit.ERROR )
+  //  return 1;
 
   // this has on occasion caused a hang
   // Serial.print("sercom->I2CM.STATUS: ");// usually 0x20, which means busstate=b10=2
